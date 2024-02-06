@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Generador de Marca de Tiempo para Discord</title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous" />
+        <link rel="stylesheet" href="css/styles.css" />
+        <link rel="stylesheet" href="css/font-awesome-4.7.0/css/font-awesome.min.css" />
+        <link rel="shortcut icon" href="img/ico.ico" type="image/x-icon" />
+    </head>
+    <body>
+        <div class="container text-center">
+            <p>Obtén una visualización dinámica de fecha y hora en tus mensajes de Discord.<br />Selecciona la fecha y hora, luego copia el código siguiente.</p>
+        </div>
+        <div class="container">
+            <span><i class="fa fa-calendar-o" aria-hidden="true"></i>&nbsp;Fecha</span>
+            <input type="date" id="d" />
+            <span><i class="fa fa-clock-o" aria-hidden="true"></i>&nbsp;Hora</span>
+            <input type="time" id="hm" />
+            <span><i class="fa fa-filter" aria-hidden="true"></i>&nbsp;Tipo</span>
+            <select id="t">
+                <option value="t">Hora corta</option>
+                <option value="T">Hora larga</option>
+                <option value="d">Fecha corta</option>
+                <option value="D">Fecha larga</option>
+                <option value="f">Fecha larga con hora corta</option>
+                <option value="F" selected>Fecha larga con día de la semana y hora corta</option>
+                <option value="R">Relativa</option>
+            </select>
+            <span><i class="fa fa-eye" aria-hidden="true"></i>&nbsp;Salida</span><span id="preview"></span> <input type="text" readonly id="code" title="Presiona Ctrl/Cmd+C para copiar" /><button id="copy">Copiar al portapapeles&nbsp;&nbsp;<i class="fa fa-clipboard" aria-hidden="true"></i></button>
+            <button id="current">Restablecer a la hora actual&nbsp;&nbsp;<i class="fa fa-repeat" aria-hidden="true"></i></button>
+        </div>
+        <script src="js/script.js"></script>
+    </body>
+</html>

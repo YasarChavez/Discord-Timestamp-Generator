@@ -1,0 +1,83 @@
+document.addEventListener("DOMContentLoaded", function () {
+    const dateInput = document.getElementById("d");
+    const timeInput = document.getElementById("hm");
+    const typeInput = document.getElementById("t");
+    const output = document.getElementById("code");
+    const copy = document.getElementById("copy");
+    const current = document.getElementById("current");
+    const preview = document.getElementById("preview");
+
+    dateInput.addEventListener("change", updateOutput);
+    timeInput.addEventListener("change", updateOutput);
+    typeInput.addEventListener("change", updateOutput);
+    output.addEventListener("mouseover", function () {
+        this.select();
+    });
+    copy.addEventListener("click", async () => {
+        updateOutput();
+        try {
+            await navigator.clipboard.writeText(output.value);
+            alert("Copiado exitosamente");
+        } catch (e) {
+            alert(e);
+        }
+    });
+
+    const onload = function () {
+        const now = new Date();
+        dateInput.value = `${now.getFullYear()}-${(now.getMonth() + 1).toString().padStart(2, "0")}-${now.getDate().toString().padStart(2, "0")}`;
+        timeInput.value = `${now.getHours().toString().padStart(2, "0")}:${now.getMinutes().toString().padStart(2, "0")}`;
+        updateOutput();
+    };
+
+    window.onload = onload;
+    current.addEventListener("click", onload);
+
+    const typeFormats = {
+        t: { timeStyle: "short" },
+        T: { timeStyle: "medium" },
+        d: { dateStyle: "short" },
+        D: { dateStyle: "long" },
+        f: { dateStyle: "long", timeStyle: "short" },
+        F: { dateStyle: "full", timeStyle: "short" },
+        R: { style: "long", numeric: "auto" },
+    };
+
+    function automaticRelativeDifference(d) {
+        const diff = -((new Date().getTime() - d.getTime()) / 1000) | 0;
+        const absDiff = Math.abs(diff);
+        console.log(diff);
+        if (absDiff > 86400 * 30 * 10) {
+            return { duration: Math.round(diff / (86400 * 365)), unit: "years" };
+        }
+        if (absDiff > 86400 * 25) {
+            return { duration: Math.round(diff / (86400 * 30)), unit: "months" };
+        }
+        if (absDiff > 3600 * 21) {
+            return { duration: Math.round(diff / 86400), unit: "days" };
+        }
+        if (absDiff > 60 * 44) {
+            return { duration: Math.round(diff / 3600), unit: "hours" };
+        }
+        if (absDiff > 30) {
+            return { duration: Math.round(diff / 60), unit: "minutes" };
+        }
+        return { duration: diff, unit: "seconds" };
+    }
+
+    function updateOutput() {
+        const selectedDate = new Date(dateInput.valueAsNumber + timeInput.valueAsNumber + new Date().getTimezoneOffset() * 60000);
+        console.log(selectedDate);
+        const ts = selectedDate.getTime().toString();
+        output.value = `<t:${ts.substr(0, ts.length - 3)}:${typeInput.value}>`;
+
+        if (["R"].includes(typeInput.value)) {
+            const formatter = new Intl.RelativeTimeFormat(navigator.language || "en", typeFormats[typeInput.value] || {});
+            const format = automaticRelativeDifference(selectedDate);
+            preview.textContent = formatter.format(format.duration, format.unit);
+        } else {
+            const formatter = new Intl.DateTimeFormat(navigator.language || "en", typeFormats[typeInput.value] || {});
+            preview.textContent = formatter.format(selectedDate);
+        }
+    }
+});
